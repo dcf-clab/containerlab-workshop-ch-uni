@@ -8,7 +8,7 @@ Clone the repository to your workshop VM:
 
 ```bash
 cd ~
-git clone https://github.com/srl-labs/containerlab-workshop-ch.git
+git clone https://github.com/dcf-clab/containerlab-workshop-ch-uni.git
 cd containerlab-workshop-ch/10-basics
 ```
 
@@ -21,10 +21,8 @@ The repo should be cloned and you should be in the `containerlab-workshop-ch` di
 
 ## Topology
 
-The topology file `basic.clab.yml` defines the lab we are going to use in this basics exercise. It consists of the two nodes:
+The topology file `basic.clab.yml` defines the lab we are going to use in this basics exercise. It consists of the two Nokia SR Linux nodes.
 
-* Nokia SR Linux
-* Nokia SR-SIM
 
 The nodes are interconnected with a single link over their respective first Ethernet interfaces.
 
@@ -33,28 +31,16 @@ name: basic
 
 topology:
   nodes:
-    srl:
+    srl-1:
       kind: nokia_srlinux
       image: ghcr.io/nokia/srlinux
 
-    srsim:
-      kind: nokia_srsim
-      image: srsim:25.7.R1
-      license: /home/user/licenses/license_srsim.txt      
-      startup-config: |
-        /configure card 1 card-type iom-1
-        /configure card 1 mda 1 mda-type me6-100gb-qsfp28
-        /configure card 1 mda 2 mda-type me12-100gb-qsfp28
-        /configure port 1/1/c1 connector breakout c1-100g
-        /configure port 1/1/c1 admin-state enable
-        /configure port 1/1/c1/1 ethernet mode hybrid
-        /configure port 1/1/c1/1 admin-state enable
-        /configure port 1/1/c1/1 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-alias
-        /configure port 1/1/c1/1 ethernet lldp dest-mac nearest-bridge receive true
-        /configure port 1/1/c1/1 ethernet lldp dest-mac nearest-bridge transmit true
-        /configure port 1/1/c1/1 ethernet lldp dest-mac nearest-bridge tx-mgmt-address oob admin-state enable     
+    srl-2:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux
+ 
   links:
-    - endpoints: [srl:e1-1, srsim:1/1/c1/1]
+    - endpoints: [srl-1:e1-1, srl-2:e1-1]
 ```
 
 ## Deployment attempt #1
@@ -83,22 +69,10 @@ Pull SR Linux container image (if it has not been pulled during attempt #1):
 docker pull ghcr.io/nokia/srlinux
 ```
 
-Load the SR-SIM image (step duration 1-2 min):
-
-```bash
-docker load -i ~/images/25.7.R1/srsim.tar.xz
-```
-
 Check the local image store again:
 
 ```bash
 docker images
-```
-
-Tag the image:
-
-```bash
-docker tag localhost/nokia/srsim:25.7.R1 nokia_srsim:25.7.R1
 ```
 
 ## Deployment attempt #2
@@ -115,10 +89,10 @@ The deployment should succeed.
 
 ## Connecting to the nodes
 
-Connect to the Nokia SR Linux node using the container name:
+Connect to the first Nokia SR Linux node using the container name:
 
 ```bash
-ssh admin@clab-basic-srl
+ssh admin@clab-basic-srl-1
 ```
 The default SRL credentials are: admin/NokiaSrl1!  
 To disconnect from the Nokia SR Linux node use:
@@ -127,17 +101,17 @@ To disconnect from the Nokia SR Linux node use:
 quit
 ```
 
-Connect to the SR-SIM node using the container name or its IP address (note that the IP might be different in each lab):
+Connect to the second Nokia SR Linux node using the container name or its IP address (note that the IP might be different in each lab):
 
 ```bash
-ssh admin@clab-basic-srsim
+ssh admin@clab-basic-srl-2
 ```
 
-The default SR-SIM credentials are: admin/NokiaSros1!  
-To disconnect from the Nokia SR-OS node use:
+The default SRL credentials are: admin/NokiaSrl1!  
+To disconnect from the Nokia SR Linux node use:
 
 ```bash
-logout
+quit
 ```
 
 ## Containerlab hosts automation
@@ -158,12 +132,12 @@ cat /etc/ssh/ssh_config.d/clab-basic.conf
 
 ## Checking network connectivity
 
-SR Linux and SR-SIM are started with their first Ethernet interfaces connected. Check the connectivity between the nodes:
+Both SR Linux nodes are started with their first Ethernet interfaces connected. Check the connectivity between the nodes:
 
 The nodes also come up with LLDP enabled, our goal is to verify that the basic network connectivity is working by inspecting
 
 ```bash
-ssh clab-basic-srl
+ssh clab-basic-srl-1
 ```
 
 and checking the LLDP neighbors on ethernet-1/1 interface
@@ -176,8 +150,8 @@ The expected output should be:
 
 ```
 --{ running }--[  ]--
-A:srl# show /system lldp neighbor interface ethernet-1/1
-A:admin@srl# show /system lldp neighbor interface ethernet-1/1
+A:srl-1# show /system lldp neighbor interface ethernet-1/1
+A:admin@srl-1# show /system lldp neighbor interface ethernet-1/1
   +--------------+-------------------+----------------------+---------------------+------------------------+----------------------+----------------------------+
   |     Name     |     Neighbor      | Neighbor System Name | Neighbor Chassis ID | Neighbor First Message | Neighbor Last Update |       Neighbor Port        |
   +==============+===================+======================+=====================+========================+======================+============================+
@@ -196,11 +170,11 @@ When you are in the directory that contains the lab file, you can list the nodes
 ╭──────────────────┬───────────────────────┬─────────┬───────────────────╮
 │       Name       │       Kind/Image      │  State  │   IPv4/6 Address  │
 ├──────────────────┼───────────────────────┼─────────┼───────────────────┤
-│ clab-basic-srl   │ nokia_srlinux         │ running │ 172.20.20.2       │
+│ clab-basic-srl-1 │ nokia_srlinux         │ running │ 172.20.20.2       │
 │                  │ ghcr.io/nokia/srlinux │         │ 3fff:172:20:20::2 │
 ├──────────────────┼───────────────────────┼─────────┼───────────────────┤
-│ clab-basic-srsim │ nokia_srsim           │ running │ 172.20.20.3       │
-│                  │ nokia_srsim:25.7.R1   │         │ 3fff:172:20:20::3 │
+│ clab-basic-srl-2 │ nokia_srlinux         │ running │ 172.20.20.3       │
+│                  │ ghcr.io/nokia/srlinux │         │ 3fff:172:20:20::3 │
 ╰──────────────────┴───────────────────────┴─────────┴───────────────────╯
 ```
 
@@ -213,11 +187,11 @@ If the topology file is located in a different directory, you can specify the pa
 ╭──────────────────┬───────────────────────┬─────────┬───────────────────╮
 │       Name       │       Kind/Image      │  State  │   IPv4/6 Address  │
 ├──────────────────┼───────────────────────┼─────────┼───────────────────┤
-│ clab-basic-srl   │ nokia_srlinux         │ running │ 172.20.20.2       │
+│ clab-basic-srl-1 │ nokia_srlinux         │ running │ 172.20.20.2       │
 │                  │ ghcr.io/nokia/srlinux │         │ 3fff:172:20:20::2 │
 ├──────────────────┼───────────────────────┼─────────┼───────────────────┤
-│ clab-basic-srsim │ nokia_srsim           │ running │ 172.20.20.3       │
-│                  │ nokia_srsim:25.7.R1   │         │ 3fff:172:20:20::3 │
+│ clab-basic-srl-2 │ nokia_srlinux         │ running │ 172.20.20.3       │
+│                  │ ghcr.io/nokia/srlinux │         │ 3fff:172:20:20::3 │
 ╰──────────────────┴───────────────────────┴─────────┴───────────────────╯
 ```
 
@@ -229,11 +203,11 @@ You can also list all running labs regardless of where their topology files are 
 ╭────────────────┬──────────┬──────────────────┬───────────────────────┬─────────┬───────────────────╮
 │    Topology    │ Lab Name │       Name       │       Kind/Image      │  State  │   IPv4/6 Address  │
 ├────────────────┼──────────┼──────────────────┼───────────────────────┼─────────┼───────────────────┤
-│ basic.clab.yml │ basic    │ clab-basic-srl   │ nokia_srlinux         │ running │ 172.20.20.2       │
+│ basic.clab.yml │ basic    │ clab-basic-srl-1 │ nokia_srlinux         │ running │ 172.20.20.2       │
 │                │          │                  │ ghcr.io/nokia/srlinux │         │ 3fff:172:20:20::2 │
 │                │          ├──────────────────┼───────────────────────┼─────────┼───────────────────┤
-│                │          │ clab-basic-srsim │ nokia_srsim           │ running │ 172.20.20.3       │
-│                │          │                  │ nokia_srsim:25.7.R1   │         │ 3fff:172:20:20::3 │
+│                │          │ clab-basic-srl-2 │ nokia_srlinux         │ running │ 172.20.20.3       │
+│                │          │                  │ ghcr.io/nokia/srlinux │         │ 3fff:172:20:20::3 │
 ╰────────────────┴──────────┴──────────────────┴───────────────────────┴─────────┴───────────────────╯
 ```
 
