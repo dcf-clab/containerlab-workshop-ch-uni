@@ -9,14 +9,14 @@ In this lab, you will install SRL-GPT, an AI assistant application installed on 
 Start with copying the Containerlab lab-examples to the working directory:
 
 ```bash
-cd ~/containerlab-workshop-ch
-cp -r /etc/containerlab/lab-examples ~/containerlab-workshop-ch/
+cd ~/containerlab-workshop-ch-uni
+cp -r /etc/containerlab/lab-examples ~/containerlab-workshop-ch-uni/
 ```
 
 ## Deploy the srl02 lab example
 
 ```bash
-clab dep -t ~/containerlab-workshop-ch/lab-examples/srl02
+clab dep -t ~/containerlab-workshop-ch-uni/lab-examples/srl02
 ```
 
 Check if the lab is running
