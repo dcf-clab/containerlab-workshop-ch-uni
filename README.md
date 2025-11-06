@@ -4,11 +4,9 @@ A list of workshop modules. Each module is a self-contained guide that can be fo
 
 1. [Containerlab Installation](05-install/README.md) 
 2. [Basics first](10-basics/README.md)
-5. [SR Linux AskAI](30-askai/README.md)
-6. [A lab that has it ~all](40-streaming-telemetry/README.md)
-7. [VS Code extension](50-clab-vscode-extension/README.md)
-
-Did you love this workshop? Let us know in the comments of this [LinkedIn post](TBD).
+3. [SR Linux AskAI](20-askai/README.md)
+4. [Streaming Telemetry](30-streaming-telemetry/README.md)
+5. [VS Code extension](40-clab-vscode-extension/README.md)
 
 References:
 -  [Containerlab](https://containerlab.dev/)
