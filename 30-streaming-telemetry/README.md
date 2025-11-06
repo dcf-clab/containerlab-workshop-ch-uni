@@ -103,6 +103,11 @@ The newly created drawio file can be found in the same folder
 LICENSE  README.md  clab-st  configs  st.clab.drawio  st.clab.yml  st.clab.yml.annotations.json  streaming-telemetry.drawio  traffic.sh
 ```
 
+To view the generated drawio file, you have two options:
+
+1. **Download the file**: Transfer the `st.clab.drawio` file to your local PC and open it with the [Draw.io Desktop application](https://github.com/jgraph/drawio-desktop/releases)
+2. **View directly on the remote server**: Install the [Draw.io Integration extension](https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio) in VS Code. This allows you to open and edit `.drawio` files directly within your VS Code editor on the remote server without needing to download them.
+
 [clab-io-draw](https://github.com/srl-labs/clab-io-draw) has many neat options, so please go checkout the readme file at the projects' repo.
 
 ### 
