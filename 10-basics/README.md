@@ -53,8 +53,6 @@ containerlab deploy -t basic.clab.yml
 
 Note that the user "user" has the required group permissions; you can run Containerlab commands without using sudo.
 
-Deployment fails, why?
-
 ## Image management
 
 Check what images are available on the system:
@@ -74,18 +72,6 @@ Check the local image store again:
 ```bash
 docker images
 ```
-
-## Deployment attempt #2
-
-Now that the images are available, try to deploy the lab again:
-
-```bash
-containerlab deploy -t basic.clab.yml
-```
-
-Note, you can use a shortcut version of the same command - `clab dep -t basic.clab.yml`.
-
-The deployment should succeed.
 
 ## Connecting to the nodes
 
@@ -157,6 +143,12 @@ A:admin@srl-1# show /system lldp neighbor interface ethernet-1/1
   +==============+===================+======================+=====================+========================+======================+============================+
   | ethernet-1/1 | 1C:C2:01:00:00:00 |                      | 1C:C2:01:00:00:00   | 8 seconds ago          | 4 seconds ago        | 1/1/c1/1, 100-Gig Ethernet |
   +--------------+-------------------+----------------------+---------------------+------------------------+----------------------+----------------------------+
+```
+
+To disconnect from the Nokia SR Linux node use:
+
+```bash
+quit
 ```
 
 ## Listing running labs

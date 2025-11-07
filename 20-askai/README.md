@@ -13,10 +13,42 @@ cd ~/containerlab-workshop-ch-uni
 cp -r /etc/containerlab/lab-examples ~/containerlab-workshop-ch-uni/
 ```
 
-## Deploy the srl02 lab example
+Verify that the `lab-examples` directory has been successfully copied by listing the contents of your working directory:
 
 ```bash
-clab dep -t ~/containerlab-workshop-ch-uni/lab-examples/srl02
+ls
+```
+
+You should see the `lab-examples` folder listed among the other directories.
+
+```bash
+05-install  10-basics  20-askai  30-streaming-telemetry  40-clab-vscode-extension  LICENSE  README.md  lab-examples
+```
+
+Navigate into the `lab-examples` folder and display the available lab examples:
+
+```bash
+cd lab-examples
+ls
+```
+Output:
+```bash
+[*]─[vm1]─[~/containerlab-workshop-ch-uni/lab-examples]
+└──> ls
+br01    clos02  fortigate  ftdv01        k8s_kind01  sonic01         srl01  srlarcos01    srlcrpd01    srlvjunos02  templated02  vr03  vsrx01
+cert01  cvx01   freebsd01  generic_vm01  openbsd01   sr-sim          srl02  srlceos01     srlfrr01     srlxrd01     vr01         vr04  vxlan01
+clos01  cvx02   frr01      ixiac01       ost-srl     srl-quickstart  srl03  srlcjunosevo  srlvjunos01  templated01  vr02         vr05
+```
+The lab examples featured in this folder are simple on purpose. They are meant to show how to add different node kinds to the topology.
+
+For more details about the available lab examples, visit the [Containerlab Lab Examples documentation](https://containerlab.dev/lab-examples/lab-examples/).
+
+For real-world lab use cases and scenarios, please check [clab-topo] (https://github.com/topics/clab-topo) on GitHub, where the community shares their labs checked into GitHub repositories.
+
+## Deploy the clos01 lab example
+
+```bash
+clab dep -t ~/containerlab-workshop-ch-uni/lab-examples/clos01
 ```
 
 Check if the lab is running
@@ -25,12 +57,12 @@ Check if the lab is running
 clab ins -a
 ```
 
-## Deploying the SRL-GPT app on clab-srl02-srl1
+## Deploying the SRL-GPT app on clab-clos01-spine
 
-Login on clab-srl02-srl1
+Login on clab-clos01-spine
 
 ```bash
-ssh clab-srl02-srl1
+ssh clab-clos01-spine
 ```
 
 The SRL-GPT app can be installed with a single command 'sudo apt update && sudo apt install -y srlgpt' that is executed in the SR Linux bash.
@@ -54,13 +86,13 @@ A:admin@srl1# show system application askai-server
   +--------------+------+---------+---------+--------------------------+
 ```
 
-Logout and log back is onto `clab-srl02-srl1` 
+Logout and log back is onto `clab-clos01-spine` 
 
 ```bash
-A:admin@srl1# quit
+A:admin@clab-clos01-spine# quit
 ```
 ```
-Connection to clab-srl02-srl1 closed.
+Connection to clab-clos01-spine closed.
 ```
 
 ## Configure the askai-server parameters
@@ -70,9 +102,9 @@ First, retrieve the openai key which you can find on the server by running the f
 ```bash
 cat ~/keys/openai_key.txt
 ```
-Login on clab-srl02-srl1
+Login on clab-clos01-spine
 ```bash
-ssh clab-srl02-srl1
+ssh clab-clos01-spine
 ```
 Configure the AskAI app
 ```bash
@@ -126,3 +158,8 @@ This configuration sets the OSPF version to OSPFv2, defines the router ID as 10.
 ```
 
 Use AskAi to learn SR Linux.
+
+## Why AskAI (SRL-GPT) Was Created
+
+AskAI (SRL-GPT) was created to showcase the extensibility of the SR Linux OS and demonstrate how powerful integrations can be achieved without overhauling the entire operating system. The application was built using SR Linux's [Network Development Kit (NDK)](https://learn.srlinux.dev/ndk/) and CLI plugin frameworks — the same tools available to all SR Linux users for extending the platform with custom functionality. For more details about the project, visit the [SR Linux GPT blog post](https://learn.srlinux.dev/blog/2023/sr-linux-gpt/).
+
