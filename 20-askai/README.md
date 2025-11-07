@@ -78,7 +78,7 @@ show system application askai-server
 ```
 Output should look like this:
 ```
-A:admin@srl1# show system application askai-server
+A:admin@spine# show system application askai-server
   +--------------+------+---------+---------+--------------------------+
   |     Name     | PID  |  State  | Version |       Last Change        |
   +==============+======+=========+=========+==========================+
@@ -120,7 +120,7 @@ commit stay
 Now that the askai-server parameters are configured, you can start asking questions using natural language
 
 ```
-A:admin@srl1# askai who are you?
+A:admin@spine# askai who are you?
 ```
 
 Accept the terms of the end user agreement
@@ -131,7 +131,7 @@ Do you accept the terms (yes/no): yes
 ```
 Example questions:
 ```
-A:admin@srl1# askai how can I configure ospf ?
+A:admin@spine# askai how can I configure ospf ?
 To configure OSPF on SR Linux, you need to set up the following minimal parameters:
 
 1. Set the OSPF version to either OSPF version 2 or version 3. If you're configuring OSPFv3, you must also specify the address family to be used, either IPv4 or IPv6.
